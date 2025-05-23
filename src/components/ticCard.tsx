@@ -1,5 +1,6 @@
 import { categorys } from "@/constants/category";
 import { Button } from "./ui/button";
+import { useEffect } from "react";
 
 export default function TicCard({
     text,
@@ -7,7 +8,10 @@ export default function TicCard({
     categorySelected,
     index ,
     setTurn,
-    setGame
+    setGame,
+    isWon,
+    handleWon,
+    setIsWon
 }:{
     text:string,
     turn: number,
@@ -16,27 +20,27 @@ export default function TicCard({
     const calculateRandom=()=>{
         return Math.floor(4*Math.random());
     }
+    
     const handleClick=()=>{
         const random = calculateRandom();
         const emoji = categorys.find((category)=>category.name==categorySelected[turn-1])?.emoji;
-        if(! emoji?.includes(text)){
-            setTurn((prevTurn:number)=>{
-                return prevTurn===2?1:2
-            })
+        if(!text || ! emoji?.includes(text)){
+            
             setGame((prevGame : string[])=>{
                 const game = prevGame;
                 game[index] = emoji?emoji[random]:"";
+                console.log(game)
                 return [...game];
             })
+            
+            
+            
         }
-        console.log(emoji)
     }
     return(
-        <Button onClick={handleClick}>
-            <div className="w-20 h-20 border-2 border-amber-400">
-                {text}
-            </div>
-        </Button>
+        <div className="w-20 h-20 border-2 border-amber-400" onClick={isWon ? undefined : handleClick}>
+            {text}
+        </div>
         
     )
 }
