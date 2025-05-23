@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, type SetStateAction } from "react"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -8,12 +8,14 @@ import { categorys } from "@/constants/category";
 import { cn } from "@/lib/utils";
 
 export default function PlayerDetails(
-    {player,setCategorySelected}
+    {player,setCategorySelected} : {
+        player:string,
+        setCategorySelected : React.Dispatch<SetStateAction<string[]>>
+    }
 ){
     
     const [open,setOpen] = useState(false);
     const [value, setValue] = useState("")
-    console.log(value);
     return(
         <Card>
             <CardHeader>
@@ -70,14 +72,14 @@ export default function PlayerDetails(
                     </Popover>
             </CardContent>
             <CardFooter>
-                <Button onClick={()=>{
-                    const index:number =categorys.findIndex((category)=>category.name === value);
+                <Button onClick={value ? ()=>{
                     setCategorySelected((prevCategorySelected : string[])=>{
-                        return [...prevCategorySelected, value];
+                        const categorySet = new Set(prevCategorySelected)
+                        categorySet.add(value);
+                        return Array.from(categorySet);
                     })
-                    categorys.splice(index,1);
                     setValue("");
-                }}>
+                } : undefined}>
                     OK
                 </Button>
             </CardFooter>
