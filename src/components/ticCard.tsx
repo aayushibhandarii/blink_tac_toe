@@ -11,7 +11,9 @@ export default function TicCard({
     setGame,
     isWon,
     handleWon,
-    setIsWon
+    setIsWon,
+    setOrder,
+    order
 }:{
     text:string,
     turn: number,
@@ -25,15 +27,30 @@ export default function TicCard({
         const random = calculateRandom();
         const emoji = categorys.find((category)=>category.name==categorySelected[turn-1])?.emoji;
         if(!text || ! emoji?.includes(text)){
-            
-            setGame((prevGame : string[])=>{
-                const game = prevGame;
-                game[index] = emoji?emoji[random]:"";
-                console.log(game)
-                return [...game];
+            const randomEmoji:string = emoji?emoji[random]:""
+            setGame((prevGame:string[])=>{
+                const game = [...prevGame]
+                game[index]= randomEmoji;
+                if(order[turn-1].length ===3){
+                    game[order[turn-1][0].index] = "";
+                }
+                
+                return [...game]
             })
-            
-            
+            setOrder((prevOrder)=>{
+                const newOrder = [...prevOrder[turn-1]];
+                newOrder.push({emoji:randomEmoji,index: index});
+                if(newOrder.length >3){
+                    
+                    newOrder.splice(0,1);
+                }
+                
+                if(turn==1){
+                    return [[...newOrder],[...prevOrder[1]]]
+                }else{
+                    return [[...prevOrder[0]],[...newOrder]]
+                }
+            })
             
         }
     }
