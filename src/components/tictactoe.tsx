@@ -17,7 +17,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
                     if(turn==1){
                         return [prevTurn[0]+1,prevTurn[1]]
                     }
-                    return [prevTurn[0],prevTurn+1]
+                    return [prevTurn[0],prevTurn[0]+1]
                 })
                 setIsWon(true)
             }else{
@@ -26,10 +26,15 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
                 })
             }
     },[game])
-    const resetState=()=>{
+    const resetState=(reset : number)=>{
+        if(reset ===1){
+            window.location.reload();
+        }
         setIsWon(false);
         setGame([...Array(9)]);
-        setTurn(1);
+        setTurn(2);
+        setOrder([[],[]])
+        
     }
     const handleWon=(emoji:string[])=>{
         //horizontal
@@ -96,7 +101,13 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
             }
         </div>
         {
-            isWon? <Button onClick={resetState}>Try Again</Button>: null
+            isWon? (
+                <div>
+                    <Button onClick={()=>resetState(0)}>Play Again</Button>
+                    <Button onClick={()=>resetState(1)}>Restart</Button>
+                </div>
+            
+        ): null
         }
         </>
     )
