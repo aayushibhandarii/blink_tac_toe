@@ -17,9 +17,9 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
             if(handleWon(emoji,game)){
                 setScore((prevTurn)=>{
                     if(turn==1){
-                        return [prevTurn[0]+1,prevTurn[1]]
+                        return [prevTurn[0]+1,prevTurn[0]]
                     }
-                    return [prevTurn[0],prevTurn[0]+1]
+                    return [prevTurn[1],prevTurn[1]+1]
                 })
                 setIsWon(true)
             }else{
