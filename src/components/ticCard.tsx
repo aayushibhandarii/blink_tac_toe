@@ -1,23 +1,25 @@
 import { categorys } from "@/constants/category";
-import { Button } from "./ui/button";
-import { useEffect } from "react";
+import type { Dispatch, SetStateAction } from "react";
 
+type OrderType = Array<Array<{ emoji: string; index: number }>>;
 export default function TicCard({
     text,
     turn,
     categorySelected,
     index ,
-    setTurn,
     setGame,
     isWon,
-    handleWon,
-    setIsWon,
     setOrder,
     order
 }:{
     text:string,
     turn: number,
-    categorySelected :string[]
+    categorySelected :string[],
+    index :number,
+    setGame : Dispatch<SetStateAction<string[]>>,
+    isWon : boolean,
+    setOrder : Dispatch<SetStateAction<OrderType>>,
+    order : Array<Array<{emoji: string ,index: number }>>
 }){
     const calculateRandom=()=>{
         return Math.floor(4*Math.random());
@@ -37,7 +39,7 @@ export default function TicCard({
                 
                 return [...game]
             })
-            setOrder((prevOrder)=>{
+            setOrder((prevOrder : OrderType)=>{
                 const newOrder = [...prevOrder[turn-1]];
                 newOrder.push({emoji:randomEmoji,index: index});
                 if(newOrder.length >3){

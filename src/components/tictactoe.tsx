@@ -4,14 +4,14 @@ import { categorys } from "@/constants/category";
 import { Button } from "./ui/button";
 
 export default function Tictactoe({categorySelected}:{categorySelected  :string[]}){
-    const [game,setGame] = useState([...Array(9)]);
+    const [game,setGame] = useState<string[]>([...Array(9)]);
     const [turn ,setTurn] = useState(1);
-    const [order,setOrder] = useState([[],[]]);
+    const [order,setOrder] = useState<Array<Array<{emoji: string ,index: number }>>>([[],[]]);
     const [isWon,setIsWon] = useState(false);
     const [score,setScore] = useState([0,0]);
     console.log(order)
     useEffect(()=>{
-            const emoji = categorys.find((category)=>category.name==categorySelected[turn-1])?.emoji;
+            const emoji : string[] | undefined = categorys.find((category)=>category.name==categorySelected[turn-1])?.emoji;
             if(handleWon(emoji)){
                 setScore((prevTurn)=>{
                     if(turn==1){
@@ -36,7 +36,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
         setOrder([[],[]])
         
     }
-    const handleWon=(emoji:string[])=>{
+    const handleWon=(emoji:string[]|undefined)=>{
         //horizontal
         let count:number =0;
         for(let i=0;i<9;i++){
@@ -46,7 +46,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
                 }
                 count =0;
             }
-            if(game[i] && emoji.includes(game[i])){
+            if(game[i] && emoji?.includes(game[i])){
                     count++;
             }
         }
@@ -58,7 +58,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
             count=0;
             for(let j=i;j<9;j+=3){
                 console.log(game[j])
-                if(game[j] && emoji.includes(game[j])){
+                if(game[j] && emoji?.includes(game[j])){
                     count++;
                 }
             }
@@ -69,7 +69,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
         //diagonal 1
         count =0;
         [0,4,8].forEach((i)=>{
-            if(game[i] && emoji.includes(game[i])){
+            if(game[i] && emoji?.includes(game[i])){
                     count++;
             }
         })
@@ -79,7 +79,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
         //diagonal 3
         count =0;
         [2,4,6].forEach((i)=>{
-            if(game[i] && emoji.includes(game[i])){
+            if(game[i] && emoji?.includes(game[i])){
                     count++;
             }
         })
@@ -97,7 +97,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
         }
         <div className="grid grid-cols-3 gap-0">
             {
-                game.map((_,i)=><TicCard key={i} index={i} text={_} turn={turn} setGame={setGame} setTurn={setTurn} isWon={isWon}setIsWon={setIsWon} handleWon={handleWon} categorySelected={categorySelected} setOrder={setOrder} order={order}/>)
+                game.map((_,i)=><TicCard key={i} text={_} turn={turn} categorySelected={categorySelected} index={i} setGame={setGame}  isWon={isWon} setOrder={setOrder} order={order}/>)
             }
         </div>
         {
