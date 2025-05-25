@@ -12,6 +12,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
     const [isWon,setIsWon] = useState(false);
     const [score,setScore] = useState([0,0]);
     useEffect(()=>{
+        if(isWon) return;
             const emoji : string[] | undefined = categorys.find((category)=>category.name==categorySelected[turn-1])?.emoji;
             if(handleWon(emoji,game)){
                 setScore((prevTurn)=>{
@@ -22,12 +23,9 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
                 })
                 setIsWon(true)
             }else{
-                if(score[0]+score[1] !=0){
-                        setTurn((prevTurn:number)=>{
-                            return prevTurn===1?2:1;
-                        })
+                if (!game.every(cell => cell)) {
+                    setTurn((prevTurn) => (prevTurn === 1 ? 2 : 1));
                 }
-                
             }
     },[game])
     
