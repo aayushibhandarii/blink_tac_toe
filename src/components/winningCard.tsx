@@ -1,7 +1,7 @@
 import { categorys } from "@/constants/constants";
 import { useEffect} from "react";
 import Confetti from 'react-confetti'
-const sound = new Audio("../../public/yay-6326.mp3");
+const sound = new Audio("../../yay-6326.mp3");
 export default function WinningCard(
     {turn,categorySelected,resetState}:
     {
