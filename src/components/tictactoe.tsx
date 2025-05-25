@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import TicCard from "./ticCard";
-import { categorys } from "@/constants/category";
-import { Button } from "./ui/button";
+import { categorys, handleWon } from "@/constants/constants";
+import { cn } from "@/lib/utils";
+
+import WinningCard from "./winningCard";
 
 export default function Tictactoe({categorySelected}:{categorySelected  :string[]}){
     const [game,setGame] = useState<string[]>([...Array(9)]);
@@ -9,10 +11,9 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
     const [order,setOrder] = useState<Array<Array<{emoji: string ,index: number }>>>([[],[]]);
     const [isWon,setIsWon] = useState(false);
     const [score,setScore] = useState([0,0]);
-    console.log(order)
     useEffect(()=>{
             const emoji : string[] | undefined = categorys.find((category)=>category.name==categorySelected[turn-1])?.emoji;
-            if(handleWon(emoji)){
+            if(handleWon(emoji,game)){
                 setScore((prevTurn)=>{
                     if(turn==1){
                         return [prevTurn[0]+1,prevTurn[1]]
@@ -26,6 +27,7 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
                 })
             }
     },[game])
+    
     const resetState=(reset : number)=>{
         if(reset ===1){
             window.location.reload();
@@ -36,79 +38,50 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
         setOrder([[],[]])
         
     }
-    const handleWon=(emoji:string[]|undefined)=>{
-        //horizontal
-        let count:number =0;
-        for(let i=0;i<9;i++){
-            if(i%3==0){
-                if(count==3){
-                    return true;
-                }
-                count =0;
-            }
-            if(game[i] && emoji?.includes(game[i])){
-                    count++;
-            }
-        }
-        //vertical
-        count=0;
-        for(let i=0;i<3;i++){
-            
-            
-            count=0;
-            for(let j=i;j<9;j+=3){
-                console.log(game[j])
-                if(game[j] && emoji?.includes(game[j])){
-                    count++;
-                }
-            }
-            if(count==3){
-                return true;
-            }
-        }
-        //diagonal 1
-        count =0;
-        [0,4,8].forEach((i)=>{
-            if(game[i] && emoji?.includes(game[i])){
-                    count++;
-            }
-        })
-        if(count==3){
-            return true;
-        }
-        //diagonal 3
-        count =0;
-        [2,4,6].forEach((i)=>{
-            if(game[i] && emoji?.includes(game[i])){
-                    count++;
-            }
-        })
-        if(count==3){
-            return true;
-        }
-        return false;
-    }
-    return(
-        <>
-            <h1>Player1 Score {score[0]}</h1>
-            <h1>Player2 Score {score[1]}</h1>
-        {
-            isWon?<h1>Player {turn}</h1>:null
-        }
+    
+    return(<>
+    {!isWon ?
+        <div className="bg-background flex flex-col justify-center items-center min-h-screen gap-6">
         <div className="grid grid-cols-3 gap-0">
             {
                 game.map((_,i)=><TicCard key={i} text={_} turn={turn} categorySelected={categorySelected} index={i} setGame={setGame}  isWon={isWon} setOrder={setOrder} order={order}/>)
             }
         </div>
-        {
-            isWon? (
-                <div>
-                    <Button onClick={()=>resetState(0)}>Play Again</Button>
-                    <Button onClick={()=>resetState(1)}>Restart</Button>
-                </div>
-            
-        ): null
-        }
-        </>
+        
+        <div
+        className="flex items-center justify-between bg-[#87CEEB]/90 p-6 rounded-2xl shadow-2xl min-w-[280px] max-w-md w-full backdrop-blur-md shadow-[0_0_25px_rgba(135,206,235,0.5)] hover:shadow-[0_0_30px_rgba(135,206,235,0.8)] transition-all duration-300"
+      >
+        <div className="flex flex-col items-center gap-1 w-1/3">
+            <span className={cn("text-4xl drop-shadow-lg",turn==1&&"scale-110 transition-transform")}>
+                {categorys.find((category)=>category.name===categorySelected[0])?.emoji[0]}
+            </span>
+            <span
+            className={cn(
+                "text-2xl font-extrabold bg-gradient-to-r from-blue-600 to-blue-800 text-transparent bg-clip-text",
+                score[0] && "animate-pulse"
+            )}
+            >
+                {score[0]}
+            </span>
+        </div>
+        <div className="w-1/3 flex justify-center items-center">
+          <span className="text-white text-xl font-bold tracking-wider">VS</span>
+        </div>
+        <div className="flex flex-col items-center gap-1 w-1/3">
+            <span className={cn("text-4xl drop-shadow-lg",turn==2&& "scale-110 transition-transform")}>
+                {categorys.find((category)=>category.name===categorySelected[1])?.emoji[0]}
+            </span>
+            <span
+            className={cn(
+                "text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-800 text-transparent bg-clip-text",
+                score[1] && "animate-pulse"
+            )}
+            >
+                {score[1]}
+            </span>
+        </div>
+      </div>
+        </div>
+:<WinningCard turn={turn} categorySelected={categorySelected} resetState={resetState}/>}</>
     )
 }

@@ -1,4 +1,5 @@
-import { categorys } from "@/constants/category";
+import { categorys } from "@/constants/constants";
+import { cn } from "@/lib/utils";
 import type { Dispatch, SetStateAction } from "react";
 
 type OrderType = Array<Array<{ emoji: string; index: number }>>;
@@ -57,8 +58,10 @@ export default function TicCard({
         }
     }
     return(
-        <div className="w-20 h-20 border-2 border-amber-400" onClick={isWon ? undefined : handleClick}>
-            {text}
+        <div className={cn("w-20 h-20 border-2 m-0.5 p-15 rounded-2xl flex items-center justify-center",!text?"bg-[#D5BEF2]":(categorys.find((category)=>category.name==categorySelected[0])?.emoji.includes(text)?"bg-[#BA87FE]":"bg-[#FBED2C]"))} onClick={isWon ? undefined : handleClick}>
+            <span className="text-4xl font-bold ">
+                {text}
+            </span>
         </div>
         
     )
