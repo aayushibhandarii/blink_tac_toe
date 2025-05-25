@@ -22,9 +22,12 @@ export default function Tictactoe({categorySelected}:{categorySelected  :string[
                 })
                 setIsWon(true)
             }else{
-                setTurn((prevTurn:number)=>{
-                    return prevTurn===2?1:2
-                })
+                if(score[0]+score[1] !=0){
+                        setTurn((prevTurn:number)=>{
+                            return prevTurn===1?2:1;
+                        })
+                }
+                
             }
     },[game])
     
